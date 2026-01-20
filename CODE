@@ -1,0 +1,111 @@
+#include <Adafruit_NeoPixel.h>
+
+// ---------- ROTARY ENCODER ----------
+#define ENC_A   6
+#define ENC_B   7
+#define ENC_SW  8
+
+// ---------- KEYS ----------
+#define KEY1    0
+#define KEY2    1
+#define KEY3    2
+#define KEY4    3
+#define KEY5    4
+
+// ---------- RGB LEDs ----------
+#define LED_PIN 10
+#define LED_COUNT 2
+
+Adafruit_NeoPixel leds(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+
+// ---------- ROTARY STATE ----------
+int lastEncA;
+int encoderPos = 0;
+
+// ---------- SETUP ----------
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  pinMode(ENC_A, INPUT_PULLUP);
+  pinMode(ENC_B, INPUT_PULLUP);
+  pinMode(ENC_SW, INPUT_PULLUP);
+
+  pinMode(KEY1, INPUT_PULLUP);
+  pinMode(KEY2, INPUT_PULLUP);
+  pinMode(KEY3, INPUT_PULLUP);
+  pinMode(KEY4, INPUT_PULLUP);
+  pinMode(KEY5, INPUT_PULLUP);
+
+  leds.begin();
+  leds.setBrightness(40);
+  leds.show();
+
+  lastEncA = digitalRead(ENC_A);
+
+  Serial.println("XIAO RP2040 TEST STARTED");
+}
+
+// ---------- LOOP ----------
+void loop() {
+  readEncoder();
+  readKeys();
+  updateLEDs();
+}
+
+// ---------- ROTARY ----------
+void readEncoder() {
+  int currentA = digitalRead(ENC_A);
+
+  if (currentA != lastEncA) {
+    if (digitalRead(ENC_B) != currentA) {
+      encoderPos++;
+    } else {
+      encoderPos--;
+    }
+
+    Serial.print("Encoder position: ");
+    Serial.println(encoderPos);
+  }
+
+  lastEncA = currentA;
+
+  if (!digitalRead(ENC_SW)) {
+    Serial.println("Encoder button pressed");
+    delay(200);
+  }
+}
+
+// ---------- KEYS ----------
+void readKeys() {
+  if (!digitalRead(KEY1)) Serial.println("KEY 1");
+  if (!digitalRead(KEY2)) Serial.println("KEY 2");
+  if (!digitalRead(KEY3)) Serial.println("KEY 3");
+  if (!digitalRead(KEY4)) Serial.println("KEY 4");
+  if (!digitalRead(KEY5)) Serial.println("KEY 5");
+
+  delay(100);
+}
+
+// ---------- LED FEEDBACK ----------
+void updateLEDs() {
+  // LED 0 shows encoder position
+  uint8_t c = abs(encoderPos) % 255;
+  leds.setPixelColor(0, leds.Color(c, 0, 255 - c));
+
+  // LED 1 turns green when any key is pressed
+  bool anyKey =
+    !digitalRead(KEY1) ||
+    !digitalRead(KEY2) ||
+    !digitalRead(KEY3) ||
+    !digitalRead(KEY4) ||
+    !digitalRead(KEY5);
+
+  if (anyKey) {
+    leds.setPixelColor(1, leds.Color(0, 255, 0));
+  } else {
+    leds.setPixelColor(1, leds.Color(0, 0, 0));
+  }
+
+  leds.show();
+}
