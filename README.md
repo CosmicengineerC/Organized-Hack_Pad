@@ -10,4 +10,5 @@ PHOTOS:
 <img width="521" height="541" alt="FULLY ASSEMBLED" src="https://github.com/user-attachments/assets/effd92b3-1304-402a-ac44-30ef5d075642" />
 <img width="886" height="733" alt="BASE + PCB" src="https://github.com/user-attachments/assets/4e6e12c1-6af1-47c2-99e9-42dda6bc8aea" />
 <img width="652" height="491" alt="Schematic layout" src="https://github.com/user-attachments/assets/34565548-a778-43de-a80f-8b13c3386167" />
+<img width="619" height="624" alt="{8C8175D8-3205-4C8E-9E41-9E164760F7F5}" src="https://github.com/user-attachments/assets/2e15d23b-79a6-4c13-aa1a-68f6c24c7db2" />
 
